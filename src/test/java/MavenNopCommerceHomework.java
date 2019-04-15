@@ -1,60 +1,15 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.print.DocFlavor;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+public class MavenNopCommerceHomework extends Utils {
 
-import static org.testng.Assert.assertEquals;
-
-public class MavenNopCommerceHomework {
-
-    //initializing WebDriver
-    protected static WebDriver driver;
-
-public static String currentDateTime(){
-    DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHMMSS");
-    Date date=new Date();
-    String date1=dateFormat.format(date);
-    System.out.println("Current date and time is "+date1);
-    return date1;
-}
-    @BeforeMethod
-    public void setUp(){
-    //setting up WebDriver
-    System.setProperty("webdriver.chrome.driver","src/test/BrowserDrivers/chromedriver.exe");
-    driver=new ChromeDriver();
-    //declare implicit wait to driver instance
-    driver.manage().timeouts().implicitlyWait(6, TimeUnit.SECONDS);
-    //tell driver to fetch url
-    driver.get("https://demo.nopcommerce.com/");
-    //maximize browser window size
-    driver.manage().window().maximize();
-    }
-
-    @AfterMethod
-    public void tearDown (){driver.close(); }
-
-    //declare implicit wait (3 seconds) for synchronization
-    public void impWait () {driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);}
-    //declare implicit Long wait (20 seconds)
-    public void impLongWait(){driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS); }
-
-    @Test(priority = 0)
+ @Test
     public void userShouldBeRegisteredSuccessfully() {
-        impWait();
         //click on Register button
-        driver.findElement(By.xpath("//div[2]/div[1]/ul/li[1]/a")).click();
+        clickElement(By.xpath("//div[2]/div[1]/ul/li[1]/a"));
         //select Male (Female) Gender
         WebElement maleRadioButton = driver.findElement(By.xpath("//*[@id=\"gender-male\"]"));
         maleRadioButton.click();
@@ -62,32 +17,31 @@ public static String currentDateTime(){
         //femaleRadioButton.click();
 
         //find First Name field and enter a value
-        driver.findElement(By.xpath("//*[@id=\"FirstName\"]")).sendKeys("rus" + currentDateTime());
+        enterText(By.xpath("//*[@id=\"FirstName\"]"),"rus" + currentDateTime());
         //find Last Name field and enter a value
-        driver.findElement(By.xpath("//*[@id=\"LastName\"]")).sendKeys("crow" + currentDateTime());
+        enterText(By.xpath("//*[@id=\"LastName\"]"),"crow" + currentDateTime());
         //select day of birth
-        Select day=new Select(driver.findElement(By.name("DateOfBirthDay")));
-        day.selectByIndex(1);
+        selectElementByIndex((By.name("DateOfBirthDay")), 1);
         //select month of birth
-        Select month=new Select(driver.findElement(By.name("DateOfBirthMonth")));
-        month.selectByIndex(1);
+        selectElementByIndex((By.name("DateOfBirthMonth")), 1);
         //select year of birth
-        Select year=new Select(driver.findElement(By.name("DateOfBirthYear")));
-        year.selectByVisibleText("2000");
+        selectElementByVisibleText((By.name("DateOfBirthYear")), "2000");
         //find E-mail field and enter a value
-        driver.findElement(By.xpath("//*[@id=\"Email\"]")).sendKeys("rus.charuh" + currentDateTime() + "@gmail.com");
+        enterText(By.xpath("//*[@id=\"Email\"]"),"rus.charuh"+currentDateTime()+"@gmail.com");
         //find Company name field and enter a value
-        driver.findElement(By.xpath("//*[@id=\"Company\"]")).sendKeys("lerus");
+        enterText(By.xpath("//*[@id=\"Company\"]"),"lerus");
         //deselect Newsletter tick box if already ticked
         boolean newsLetterTickBox=driver.findElement(By.xpath("//*[@id=\"Newsletter\"]")).isSelected();
-        if (newsLetterTickBox == true) { driver.findElement(By.xpath("//*[@id=\"Newsletter\"]")).click(); }
+        if (newsLetterTickBox == true){
+            clickElement(By.xpath("//*[@id=\"Newsletter\"]"));}
         //find Password field and enter a value
-        driver.findElement(By.xpath("//*[@id=\"Password\"]")).sendKeys("ruscrowtest");
+        enterText(By.xpath("//*[@id=\"Password\"]"),"ruscrowtest");
         //find Confirm Password fields and enter the same value as above
-        driver.findElement(By.xpath("//*[@id=\"ConfirmPassword\"]")).sendKeys("ruscrowtest");
+        enterText(By.xpath("//*[@id=\"ConfirmPassword\"]"),"ruscrowtest");
         //find and click on Registration button
-        driver.findElement(By.xpath("//*[@id=\"register-button\"]")).click();
+        clickElement(By.xpath("//*[@id=\"register-button\"]"));
         //initialize a String to hold the ActualRegistration Success Message
+        //captureText(By.xpath("//form/div/div[2]/div[1]"));
         String actRegSucMsg = driver.findElement(By.xpath("//form/div/div[2]/div[1]")).getText();
         //Assert Expected and Actual results
         Assert.assertEquals("Your registration completed", actRegSucMsg);
@@ -95,14 +49,10 @@ public static String currentDateTime(){
 
     @Test(priority = 2)
     public void userShouldBeAbleToNavigateToNotebooksCategoryPageFromComputers(){
-        //wait for 3 seconds
-        impWait();
         //find Computers page link on homepage and click on it
-        driver.findElement(By.xpath("//div[6]/div[2]/ul[1]/li[1]/a")).click();
-        //wait for 3 seconds
-        impWait();
+        clickElement(By.xpath("//div[6]/div[2]/ul[1]/li[1]/a"));
         //find Notebooks link and click on it
-        driver.findElement(By.xpath("//div[1]/div[2]/ul/li[1]/ul/li[2]/a")).click();
+        clickElement(By.xpath("//div[1]/div[2]/ul/li[1]/ul/li[2]/a"));
         //Capture actual result into a String
         String actual=driver.findElement(By.xpath("//h1")).getText();
         //expected result from requirements
@@ -113,8 +63,6 @@ public static String currentDateTime(){
 
     @Test(priority = 3)
     public void userShouldBeAbleToNavigateToCellPhonesViaElectronics(){
-        //wait for 3 seconds
-        impWait();
         //initialize WebElement for Electronics menu link
         WebElement elemElectronics = driver.findElement(By.linkText("Electronics"));
         //initialize WebElement for Cell phones menu option link
@@ -132,17 +80,14 @@ public static String currentDateTime(){
     }
     @Test(priority = 1)
     public void userShouldBeAbleToLoginSuccessfully(){
-        impWait();
         //click on Login button
-        driver.findElement(By.xpath("//div[2]/div[1]/ul/li[2]/a")).click();
+        clickElement(By.xpath("//div[2]/div[1]/ul/li[2]/a"));
         //find Email field and enter rus+555@gmail.com
-        driver.findElement(By.xpath("//*[@id=\"Email\"]")).sendKeys("rus.charuh+555@gmail.com");
+        enterText(By.xpath("//*[@id=\"Email\"]"),"rus.charuh+555@gmail.com");
         //find Password field and enter Crowrustest
-        driver.findElement(By.xpath("//*[@id=\"Password\"]")).sendKeys("Crowrustest");
+        enterText(By.xpath("//*[@id=\"Password\"]"),"Crowrustest");
         //find Login button and click on it
-        driver.findElement(By.xpath("//form/div[3]/input")).click();
-        //wait for 3 seconds
-        impWait();
+        clickElement(By.xpath("//form/div[3]/input"));
 
         //String isLogOutButtonPresent=driver.findElement(By.xpath("//div[2]/div[1]/ul/li[2]/a")).getText();
         //Expected Log out button
@@ -159,12 +104,10 @@ public static String currentDateTime(){
 
     @Test(priority = 4)
     public void userShouldBeAbleToAddProductToShoppingCart(){
-        //wait for 3 seconds
-        impWait();
         //initialize Books path
         String pathBooks="//div[6]/div[2]/ul[1]/li[5]/a";
         //follow Books path and click on the link
-        driver.findElement(By.xpath(pathBooks)).click();
+        clickElement(By.xpath(pathBooks));
         //initialize path to first book
         //String pathBook1="//div[1]/div/div[2]/div[3]/div[2]/input[1]";
         //add first book to cart
@@ -176,7 +119,7 @@ public static String currentDateTime(){
         //initialize path to third book
         String pathBook3="//div[3]/div/div[2]/div[3]/div[2]/input[1]";
         //add third book to cart
-        driver.findElement(By.xpath(pathBook3)).click();
+        clickElement(By.xpath(pathBook3));
         String actual=driver.findElement(By.xpath("//*[@id=\"bar-notification\"]/p")).getText();
         String expected="The product has been added to your shopping cart";
         Assert.assertEquals(expected,actual);
